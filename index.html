@@ -3,25 +3,98 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" href="twittler.css">
+    <style>
+    h1 {
+    display: inline-block;
+    color: blue;
+    font-family: verdana;
+    font-size: 300%;
+    }
+    </style>
   </head>
   <body>
+  <h1>Twittler</h1>
     <script>
-
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+      var $body = $('body');
+      $body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+      var $header = $("<h1>Twittler</h1>");
+      $body.html($header);
+      // $( ":header" ).css({position: static;color: "blue" });
+
+      var $p = $('p');
+      $body.html($p);
+
+      var index;
+
+      var latestIndex = 0;
+
+      var newTweetsInterval;
+
+      var allUsers = ['shawndrost', 'sharksforcheap', 'mracus', 'douglascalhoun'];
+      var displayOnlyUser = ['mracus'];
+
+      var printNewTweets = function () {
+      var i = streams.home.length - 1;
+      var leftOffAt = latestIndex;
+        while(i >= leftOffAt){
+          var tweet = streams.home[i];
+
+
+              var $tweet = $("<div class=" + tweet.user + "></div>");
+
+              if(displayOnlyUser.includes(tweet.user)) {
+                $tweet.html("<strong class='" + tweet.user + "'>@" + tweet.user + '</strong>: ' + tweet.message + '<br />' + tweet.created_at + '<br />');
+                $tweet.prependTo($body);
+            } else {
+              continue;
+            }
+              i -= 1;
+          }
         }
 
-      });
 
+      var everyTwoSeconds = function () {
+        setInterval( function() {
+          var copy = streams.home.slice();
+          var latestTweetsOnly = copy.slice(latestIndex);
+          latestIndex = copy.length - 1;
+          printNewTweets();
+
+        }, 2000);
+      }
+
+
+
+
+     // var goBack = function () {
+     //   window.history.back();
+     // }
+
+
+     var goToProfile = function (user) {
+       clearInterval(EveryTwoSeconds());
+       displayOnlyUser = [user];
+       var everyoneElse = allUsers.filter( function(name) {
+         return name !== user;
+       });
+       console.log(everyoneElse);
+
+       everyoneElse.forEach( function (user) {
+         $("." + user).empty();
+       });
+
+     };
+
+     everyTwoSeconds();
+
+     goToProfile('mracus');
+
+
+
+      });
     </script>
   </body>
 </html>
