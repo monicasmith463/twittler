@@ -3,7 +3,7 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-    <link rel="stylesheet" href="twittler.css">
+
     <style>
     h1 {
     display: inline-block;
@@ -14,27 +14,24 @@
     </style>
   </head>
   <body>
-  <h1>Twittler</h1>
     <script>
       $(document).ready(function(){
       var $body = $('body');
       $body.html('');
 
       var $header = $("<h1>Twittler</h1>");
-      $body.html($header);
-      // $( ":header" ).css({position: static;color: "blue" });
+      $( ":header" ).css({color: "blue" });
+      $header.appendTo($body);
 
-      var $p = $('p');
-      $body.html($p);
 
       var index;
-
+      var everyTwoSeconds;
       var latestIndex = 0;
 
       var newTweetsInterval;
 
       var allUsers = ['shawndrost', 'sharksforcheap', 'mracus', 'douglascalhoun'];
-      var displayOnlyUser = ['mracus'];
+      var displayOnlyUser = allUsers;
 
       var printNewTweets = function () {
       var i = streams.home.length - 1;
@@ -56,15 +53,18 @@
         }
 
 
-      var everyTwoSeconds = function () {
-        setInterval( function() {
+    function everyTwoSeconds(){
+
+      setInterval( function() {
           var copy = streams.home.slice();
           var latestTweetsOnly = copy.slice(latestIndex);
           latestIndex = copy.length - 1;
           printNewTweets();
 
         }, 2000);
-      }
+
+}
+
 
 
 
@@ -74,17 +74,21 @@
      // }
 
 
-     var goToProfile = function (user) {
+     function goToProfile (user) {
        clearInterval(EveryTwoSeconds());
        displayOnlyUser = [user];
+
        var everyoneElse = allUsers.filter( function(name) {
          return name !== user;
        });
-       console.log(everyoneElse);
+
 
        everyoneElse.forEach( function (user) {
-         $("." + user).empty();
+         console.log(user);
+         $("." + user).remove();
        });
+
+       everyTwoSeconds();
 
      };
 
