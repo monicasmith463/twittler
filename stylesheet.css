@@ -1,0 +1,40 @@
+h1 {
+  display: inline-block;
+  color: blue;
+  font-family: verdana;
+  font-size: 300%;
+}
+
+h3 {
+  display: inline-block;
+  color: DeepSkyBlue;
+  font-family: verdana;
+  font-size: 100%;
+  padding: 5px;
+}
+
+.username {
+  color: DeepSkyBlue;
+  font-family: verdana;
+  font-size: 110%;
+  padding: 5px;
+}
+
+.tweet {
+  font-family: verdana;
+  padding: 20px;
+}
+
+.timestamp {
+  font-size: 75%;
+}
+
+#sa {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 500px ;
+  height: 500px;
+  background-color: none;
+  float: right;
+
+}

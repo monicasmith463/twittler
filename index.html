@@ -3,29 +3,33 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-
-    <style>
-    h1 {
-    display: inline-block;
-    color: blue;
-    font-family: verdana;
-    font-size: 300%;
-    }
-    </style>
+    <link rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
     <script>
       $(document).ready(function(){
       var $body = $('body');
       $body.html('');
+      var $header = $('<h1>Twittler</h1></br><h3>A platform for</h3>');
+      $body.append($header);
+      $header.click( function () {
+        goBackHome()
+      });
+      var $sa = $(
+        '<div id="tweetSpace" style="overflow-y:scroll;overflow-x:hidden; width: 700px ;height:500px;background-color:none; float: right">'+
+        '<p id="sa"></p>'
+        + '</div>'
+      );
 
-      var $header = $("<h1>Twittler</h1>");
-      $( ":header" ).css({color: "blue" });
-      $header.appendTo($body);
+      $sa.appendTo($body);
+
+      // var $header = $("<h1>Twittler</h1>");
+      // $header.css({color: "blue" });
+      // $header.appendTo($body);
 
 
       var index;
-      var everyTwoSeconds;
+
       var latestIndex = 0;
 
       var newTweetsInterval;
@@ -34,26 +38,30 @@
       var displayOnlyUser = allUsers;
 
       var printNewTweets = function () {
-      var i = streams.home.length - 1;
-      var leftOffAt = latestIndex;
+        var i = streams.home.length - 1;
+        var leftOffAt = latestIndex;
         while(i >= leftOffAt){
           var tweet = streams.home[i];
+          var $tweet = $("<div class= \"tweet " + tweet.user + "\"></div>");
+          $tweet.click( function () {
+            goToProfile(tweet.user)
+          });
 
-
-              var $tweet = $("<div class=" + tweet.user + "></div>");
-
-              if(displayOnlyUser.includes(tweet.user)) {
-                $tweet.html("<strong class='" + tweet.user + "'>@" + tweet.user + '</strong>: ' + tweet.message + '<br />' + tweet.created_at + '<br />');
-                $tweet.prependTo($body);
-            } else {
-              continue;
-            }
-              i -= 1;
+          if(displayOnlyUser.includes(tweet.user)) {
+            $tweet.html("<strong class=\"username " + tweet.user + "\">@" + tweet.user + "</strong>" +
+            '<em class=\"message\">'+ tweet.message + '</em><br />' +
+            "<span class=timestamp>"+ tweet.created_at + "</span><br />"
+            );
+            $tweet.prependTo($sa);
+          } else {
+            return;
           }
+          i -= 1;
         }
+      }
 
 
-    function everyTwoSeconds(){
+    newTweetsInterval = function (){
 
       setInterval( function() {
           var copy = streams.home.slice();
@@ -63,7 +71,7 @@
 
         }, 2000);
 
-}
+    };
 
 
 
@@ -73,32 +81,47 @@
      //   window.history.back();
      // }
 
+     var goBackHome = function () {
+       goToProfile(allUsers);
+     }
 
-     function goToProfile (user) {
-       clearInterval(EveryTwoSeconds());
-       displayOnlyUser = [user];
+     // var clickerFunc = function () {
+     //   var el = document.getElementsByClassName('mracus');
+     //   for (var i=0; i < el.length; i++) {
+     //     console.log(el);
+     //     el.item[i].onclick = goToProfile('mracus');
+     //   }
+     // }();
 
-       var everyoneElse = allUsers.filter( function(name) {
-         return name !== user;
-       });
+
+     var goToProfile = function (user) {
+       clearInterval(newTweetsInterval);
+       if(user === allUsers) {
+         displayOnlyUser = allUsers;
+         $(".username").display;
+       } else {
+         displayOnlyUser = [user];
+         leftOffAt = streams.home.length - 1;
+
+         var everyoneElse = allUsers.filter( function(name) {
+           return name !== user;
+         })
 
 
-       everyoneElse.forEach( function (user) {
-         console.log(user);
-         $("." + user).remove();
-       });
+         everyoneElse.forEach( function(user){
+           console.log("I should hide ." + user);
+           $("." + user).hide();
 
-       everyTwoSeconds();
+         })
+       }
 
      };
 
-     everyTwoSeconds();
+     newTweetsInterval();
 
-     goToProfile('mracus');
+   });
 
 
-
-      });
     </script>
   </body>
 </html>
