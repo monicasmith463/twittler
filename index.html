@@ -10,7 +10,7 @@
       $(document).ready(function(){
       var $body = $('body');
       $body.html('');
-      var $header = $('<h1>Twittler</h1></br><h3>A platform for</h3>');
+      var $header = $('<h1>Twittler</h1></br><h3>What\'s on your mind?</h3>');
       $body.append($header);
       $header.click( function () {
         goBackHome()
@@ -23,19 +23,13 @@
 
       $sa.appendTo($body);
 
-      // var $header = $("<h1>Twittler</h1>");
-      // $header.css({color: "blue" });
-      // $header.appendTo($body);
-
 
       var index;
-
       var latestIndex = 0;
-
       var newTweetsInterval;
-
       var allUsers = ['shawndrost', 'sharksforcheap', 'mracus', 'douglascalhoun'];
       var displayOnlyUser = allUsers;
+      var everyoneElse;
 
       var printNewTweets = function () {
         var i = streams.home.length - 1;
@@ -46,76 +40,64 @@
           $tweet.click( function () {
             goToProfile(tweet.user)
           });
+          //username @ +
+          $tweet.html("<strong class=\"username " + tweet.user + "\">@" + tweet.user + "</strong>" +
+          //" +
+          "<strong class = \"quotations\">\"</strong>"+
+          //message +
+          "<em class=\"message\">" + tweet.message + "</em>" +
+          //" +
+          "<strong class = \"quotations\">\"</strong><br />"+
+          //time
+          "<span class=timestamp>" + tweet.created_at + "</span><br />");
+          //add to scrolling area
+          $tweet.prependTo($sa);
 
           if(displayOnlyUser.includes(tweet.user)) {
-            $tweet.html("<strong class=\"username " + tweet.user + "\">@" + tweet.user + "</strong>" +
-            '<em class=\"message\">'+ tweet.message + '</em><br />' +
-            "<span class=timestamp>"+ tweet.created_at + "</span><br />"
-            );
-            $tweet.prependTo($sa);
+            $tweet.show();
           } else {
-            return;
+            $tweet.hide();
           }
+
           i -= 1;
         }
       }
 
 
     newTweetsInterval = function (){
-
-      setInterval( function() {
+      setInterval(function(){
           var copy = streams.home.slice();
           var latestTweetsOnly = copy.slice(latestIndex);
           latestIndex = copy.length - 1;
           printNewTweets();
-
         }, 2000);
+    }
 
-    };
-
-
-
-
-
-     // var goBack = function () {
-     //   window.history.back();
-     // }
-
-     var goBackHome = function () {
+     var goBackHome = function(){
        goToProfile(allUsers);
      }
 
-     // var clickerFunc = function () {
-     //   var el = document.getElementsByClassName('mracus');
-     //   for (var i=0; i < el.length; i++) {
-     //     console.log(el);
-     //     el.item[i].onclick = goToProfile('mracus');
-     //   }
-     // }();
 
 
      var goToProfile = function (user) {
        clearInterval(newTweetsInterval);
        if(user === allUsers) {
+         console.log("yes");
+         everyoneElse.forEach( function(user){
+           $("." + user).show();
+         });
          displayOnlyUser = allUsers;
-         $(".username").display;
        } else {
          displayOnlyUser = [user];
          leftOffAt = streams.home.length - 1;
-
-         var everyoneElse = allUsers.filter( function(name) {
+         everyoneElse = allUsers.filter(function(name){
            return name !== user;
          })
-
-
          everyoneElse.forEach( function(user){
-           console.log("I should hide ." + user);
            $("." + user).hide();
-
          })
        }
-
-     };
+     }
 
      newTweetsInterval();
 
